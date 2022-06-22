@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@model List<GSTCalculator.Models.Invoice>
+
+
+<h2>GST Calculator</h2>
+<h5>
+    <b>Total Invoices</b> @ViewBag.Invoice <br />
+    <b>Return Dictionary</b> @ViewBag.Result <br />
+</h5>
+
+@if (ViewBag.Result != null)
+{
+    <h4><b>Return Results</b><br /></h4>
+    foreach (var item in ViewBag.Result)
+    {
+
+        <ul>
+            <li>
+                <h5>
+                    NZ Tax Rate @item.Key.nzrate
+                    Total Tax Amount @item.Value
+                </h5>
+            </li>
+        </ul>
+    }
+}
+
+@using (Html.BeginForm("Form", "Home", FormMethod.Post))
+{
+    <table>
+        <tr>
+            <th>Goods and Services Tax </th>
+        </tr>
+        <tbody id="GenaratorList">
+            <tr>
+                @{
+
+                    int counter = 0;
+                    <td>Enter Amount: </td>
+                    <td>@Html.TextBoxFor(m => m[counter].Amount, new { id = "Amount" })</td>
+                    <td>Enter NZ Tax Rate: </td>
+                    <td>@Html.TextBoxFor(m => m[counter].NZTaxRate, new { id = "NZTaxRate" })</td>
+                    <td><input type="button" value="Add" onclick="addGenarator()" /></td>
+                    counter++;
+                }
+            </tr>
+        <tbody>
+    </table>
+    <input type="submit" value="Submit Form" />
+}
+
+
+<script>
+    count = 0;
+    function addGenarator() {
+        var Amount = $('#Amount').val();
+        var NZTaxRate = $('#NZTaxRate').val();
+        var invoice = "orders[" + count + "]";
+        var html = `
+        <tr>
+            <td><input id="${invoice}.Amount" name="${invoice}.Amount" type="text" class="form-control" readonly value="${Amount}" /></td>
+            <td><input id="${invoice}.NZTaxrate" name="${invoice}.NZTaxRate" type="text" class="form-control" readonly value="${NZTaxRate}" /></td>
+        </tr>
+    `;
+
+        $('#GenaratorList').append(html);
+        $('#Amount,#NZTaxRate').val('');
+        count++;
+
+    }
+</script>
+
+
